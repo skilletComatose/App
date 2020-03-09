@@ -1,0 +1,34 @@
+version: '3'   # se establece la version de docker compose que se va a usar 
+services:
+
+  SQL:
+    container_name: MYDATABASE   # asigna el nombre del Contenedor donde esta virtualizada la base de datos
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password 
+    restart: always
+    environment: 
+      MYSQL_ROOT_PASSWORD: nobody 
+    ports:
+      - "3306:3306"           
+
+      
+  redis:
+    container_name: redis
+    image: redis
+    ports: 
+      - "6379:6379"    
+  
+  web:
+    build: .
+
+    ports:
+      - "5000:5000"
+      
+    depends_on: 
+      - SQL
+      - redis
+
+    links: 
+      - SQL
+      - redis
+
