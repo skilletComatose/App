@@ -1,15 +1,6 @@
-#from __init__ import app
-
 from flask_mysqldb import MySQL
 import redis
-#import redis
-#import json
-#
-#app.config['MYSQL_HOST'] = 'SQL'
-#app.config['MYSQL_USER'] = 'root'
-#app.config['MYSQL_PASSWORD'] = 'nobody'
-#app.config['MYSQL_DB'] = 'mysql'
-#mysql = MySQL(app)
+import json
 
 class ConexionSQL:
     def __init__(self,cur,js,mys):
@@ -32,17 +23,10 @@ class ConexionRedis:
     
     def Insert_data(self):
         r_server = redis.Redis(self.host)
-        r_server.set("info",self.jsonfile)
-        
-    #cur->cursor = mysql.connection.cursor()
-    #query = "CREATE TABLE IF NOT EXISTS tabla1 ( info JSON NOT NULL )"  
-    #cursor.execute(query)
+        r_server.incr("index", 1) 
+        index = r_server.get("index").decode("utf-8")
+        key = int(index)
+        new_d = json.loads(self.jsonfile)
+        r_server.hmset(key,new_d)
 
-
-    #cursor.execute("INSERT INTO tabla1  VALUES (%s)", (jsonfile,))
-    #mysql.connection.commit()
-    #cursor.close()
-
-    #r_server = redis.Redis("redis")
-    #r_server.set("info",jsonfile)    
-
+   

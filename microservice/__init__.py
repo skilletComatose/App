@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 #import redis
 from microservice.adapter2 import Convertir
 from microservice.storage import ConexionRedis, ConexionSQL
-
+import json
 
 
 
@@ -37,6 +37,19 @@ def create_app():
 
         return render_template("form.html")
           
+    @app.route("/iot", methods=['GET', 'POST'])
+    def iot():
+        ata = request.get_json()
+        if(request.method=='POST' and ata):
+            data = json.dumps(ata)
 
+            conecSQL = ConexionSQL( mysql.connection.cursor(), data  ,mysql ) #un obejeto del tipo$
+            conecSQL.Create_table()
+            conecSQL.Insert_data()
+
+            conecRedis = ConexionRedis("redis",data)
+            conecRedis.Insert_data()
+            return data    
+    
     return app
 
