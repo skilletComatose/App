@@ -15,6 +15,10 @@ def create_app():
     app.config['MYSQL_PASSWORD'] = 'nobody'
     app.config['MYSQL_DB'] = 'mysql'
     mysql = MySQL(app)
+    
+    @app.route("/index")
+    def index():
+        return render_template("index.html")
 
     @app.route('/', methods=['POST', 'GET'])
     def guardar():
